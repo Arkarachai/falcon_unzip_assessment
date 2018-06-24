@@ -1,0 +1,43 @@
+{
+  "name": "generate_ucsc_track_data",
+  "title": "Generate the custom track data for UCSC",
+  "summary": "Generate the custom track data to be visualized with UCSC genome browser",
+  "dxapi": "1.0.0",
+  "version": "1.0.0",
+  "inputSpec": [
+    {
+      "name": "filtered_informative_snps",
+      "label": "Table of filtered haplotigs and informative SNPs",
+      "class": "file",
+      "optional": false,
+      "patterns": ["filtered_informative_snps"],
+      "help": ""
+    },
+    {
+      "name": "contig_id",
+      "label": "contigs id(s) of interest separated by comma",
+      "class": "string",
+      "optional": false,
+      "help": "Example: 000003F_010,000024F_048,000537F_001"
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "custom_track_files",
+      "class": "array:file",
+      "patterns": ["*"],
+      "help": ""
+    }
+  ],
+  "runSpec": {
+    "timeoutPolicy": {"*": {"hours": 12}},
+    "interpreter": "bash",
+    "file": "src/code.sh",
+    "distribution": "Ubuntu",
+    "release": "14.04"
+  },
+  "regionalOptions": {
+    "aws:us-east-1": {"systemRequirements": {"*": {"instanceType": "mem1_ssd1_x4"}},
+                      "assetDepends": [{"id": {"$dnanexus_link": "record-FGgx3BQ0F78G15yp57zy69ZZ"}}]}
+  }
+}

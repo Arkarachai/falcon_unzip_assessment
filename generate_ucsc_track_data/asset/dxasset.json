@@ -1,0 +1,8 @@
+{
+  "name": "python_pandas_asset", 
+  "title": "Python pandas asset", 
+  "description": "pandas", 
+  "version": "1.0.0", 
+  "distribution": "Ubuntu", 
+  "release": "14.04"
+}

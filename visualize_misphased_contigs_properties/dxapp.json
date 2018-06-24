@@ -1,0 +1,74 @@
+{
+  "name": "visualize_misphased_contigs_properties",
+  "title": "Visualize misphased contigs properties",
+  "summary": "Generate figures that depict properties of misphased contigs",
+  "dxapi": "1.0.0",
+  "version": "1.0.0",
+  "inputSpec": [
+    {
+      "name": "filtered_informative_snps",
+      "label": "Table of filtered haplotigs and informative SNPs",
+      "class": "file",
+      "optional": false,
+      "patterns": ["filtered_informative_snps"],
+      "help": ""
+    },
+    {
+      "name": "raw_plotting_files",
+      "label": "Want raw data that generate plot?",
+      "class": "boolean",
+      "optional": false,
+      "default": true,
+      "help": ""
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "scatter_n_error_vs_switch_error",
+      "label": "Scatter plot of number of error vs number of switch error",
+      "class": "file",
+      "patterns": ["*.pdf"],
+      "help": ""
+    },
+    {
+      "name": "box_plot_boundary_size",
+      "label": "Box plot of boundary size for misjoined and random error haplotigs",
+      "class": "file",
+      "patterns": ["*.pdf"],
+      "help": ""
+    },
+    {
+      "name": "box_plot_boundary_size_random_error_edge_effect",
+      "label": "Box plot of boundary size for random error haplotigs at first/last SNPs and others",
+      "class": "file",
+      "patterns": ["*.pdf"],
+      "help": ""
+    },
+    {
+      "name": "histogram_normalize_boundary_location",
+      "label": "Histogram of switch error location",
+      "class": "file",
+      "patterns": ["*"],
+      "help": ""
+    },
+    {
+      "name": "intermediate_file",
+      "label": "Raw data that generate plot",
+      "class": "array:file",
+      "patterns": ["*"],
+      "optional": true,
+      "help": "(Optional)."
+    }
+  ],
+  "runSpec": {
+    "timeoutPolicy": {"*": {"hours": 12}},
+    "interpreter": "bash",
+    "file": "src/code.sh",
+    "distribution": "Ubuntu",
+    "release": "14.04"
+  },
+  "regionalOptions": {
+    "aws:us-east-1": {"systemRequirements": {"*": {"instanceType": "mem1_ssd1_x4"}},
+                          "assetDepends": [{"id": {"$dnanexus_link": "record-FGgvf3j0bV28g9f10F0Pv2YK"}}]}
+  }
+}
