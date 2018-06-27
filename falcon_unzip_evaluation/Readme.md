@@ -5,12 +5,16 @@ This applet evaluates of the FALCON-Unzip algorithm using trio Illumina data. It
 
 ## What data are required for this applet to run?
 The inputs include:
+
 1 Multi-sample VCF of the trio. The order of trio go by son-father-mother
+
 2 Variants calling of assembled son primary contigs from MUMmur program
+
 3 Variants calling of assembled son haplotype contigs from MUMmur program
 
 ## What does this applet output?
 The outputs include:
+
 1 Informative SNPs, SNPs that can be determined parental origin, from trio data in tab-separated values format. Each row is one SNP and it represent:
 `allele_inherit_from_father` `allele_inherit_from_mother` `CHROM` `POS` `ID` `REF` `ALT`     `QUAL` `FILTER` `INFO` `FORMAT` `son` `father` `mother` `trio_allele_code`
 
