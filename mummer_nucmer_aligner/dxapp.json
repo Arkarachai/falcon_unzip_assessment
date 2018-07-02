@@ -53,7 +53,7 @@
     {
       "name": "nucmer_filtered_snps",
       "class": "file",
-      "patterns": ["*"],
+      "patterns": ["*.snps"],
       "help": ""
     }
   ],
