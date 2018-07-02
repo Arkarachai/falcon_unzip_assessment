@@ -1,0 +1,73 @@
+{
+  "name": "mummer_nucmer_aligner",
+  "title": "MUMmer3 nucmer aligner",
+  "summary": "Run MUMmer3's nucmer algorithm to align two sets of genomic sequences to each other. This can be used for instance to compare a genome assembly to a reference genome or to compare the genomes of two related species",
+  "dxapi": "1.0.0",
+  "version": "1.0.0",
+  "inputSpec": [
+    {
+      "name": "query_fastagz",
+      "label": "Query sequences",
+      "help": "",
+      "class": "file",
+      "patterns": ["*.fa.gz", "*.fasta.gz"],
+      "optional": false
+    },
+    {
+      "name": "ref_fastagz",
+      "label": "Reference sequences",
+      "help": "",
+      "class": "file",
+      "patterns": ["*.fasta.gz", "*.fa.gz"],
+      "optional": false
+    },
+    {
+      "name": "extra_cmd",
+      "label": "Extra command line options for nucmer",
+      "help": "See the MUMmer3 manual for details. These parameters are passed straight to nucmer.",
+      "class": "string",
+      "optional": true,
+      "default": ""
+    },
+    {
+      "name": "prefix",
+      "label": "Output prefix",
+      "help": "",
+      "class": "string",
+      "optional": true
+    }
+  ],
+  "outputSpec": [
+    {
+      "name": "nucmer_full_outputs",
+      "class": "array:file",
+      "patterns": ["*"],
+      "help": ""
+    },
+    {
+      "name": "nucmer_filtered_outputs",
+      "class": "array:file",
+      "patterns": ["*"],
+      "help": ""
+    },
+    {
+      "name": "nucmer_filtered_snps",
+      "class": "file",
+      "patterns": ["*"],
+      "help": ""
+    }
+  ],
+  "runSpec": {
+    "timeoutPolicy": {"*": {"hours": 48}},
+    "interpreter": "bash",
+    "file": "src/code.sh",
+    "distribution": "Ubuntu",
+    "release": "14.04"
+  },
+  "regionalOptions": {
+    "aws:us-east-1": {"systemRequirements": {"*": {"instanceType": "mem3_ssd1_x16"}},
+                      "assetDepends": [{"id": {"$dnanexus_link": "record-F8Q8xBQ0XyyBQxvK0g3qgjzg"}},
+                        {"id": {"$dnanexus_link": "record-FGgvGv005PVz6J3457qP3yYx"}}]
+     }
+  }
+}
