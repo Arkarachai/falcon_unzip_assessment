@@ -2,7 +2,7 @@
 
 The purpose of this GitHub repo is to distribute the analysis code of the publication **How well we can phase the assembled diploid human genome?: Assessment of FALCON-Unzip phasing using human trio** by *Arkarachai Fungtammasan* and *Brett Hannigan*. It aims for reproducibility. The users are free to make use of all the underline scripts for their own researches related/unrelated to this study. However, with a different experimental set including changing the version of reference genome or using a daughter instead of a son, some part of the scripts should be changed to reflect different experimental designs.
 
-These applets have already been built to the public project-xxxxxxxxxxxxxx. However, the user may also git clone this GitHub and build them yourself.
+These applets have already been built to the public project-FGvfpX801xQ9Q4GZ6FfPZGxy. However, the user may also git clone this GitHub and build them yourself.
 
 Although the code is organized to operate on DNAnexus, the user can also run them on their local computer. 
 
