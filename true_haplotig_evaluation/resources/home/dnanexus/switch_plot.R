@@ -1,0 +1,6 @@
+library(ggplot2)
+args = commandArgs(trailingOnly=TRUE)
+dataset=read.table(args[1])
+pdf(paste(args[1],'.pdf',sep=''))
+ggplot(data=dataset, aes(x=V3, y=V2, col=V1,alpha=0.1)) + geom_line() +geom_point() + theme(legend.position="none")+ theme(axis.title.y=element_blank(),axis.text.y=element_blank(),axis.ticks.y=element_blank())+labs(x = "Normalized coordinates")
+dev.off()
