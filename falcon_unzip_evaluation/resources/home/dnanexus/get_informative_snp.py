@@ -5,6 +5,7 @@ import sys
 
 def genotype_column(record):
 
+    record = record.replace('|', '/')
     tempgenotype = map(int, record.split(':')[0].split('/'))
     tempgenotype.sort()
     return tempgenotype
