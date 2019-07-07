@@ -28,6 +28,15 @@
       "optional": false,
       "default": true,
       "help": "Select this to get all intermediated results."
+    },
+    {
+      "name": "parent",
+      "label": "Paternal or Maternal?",
+      "class": "string",
+      "optional": false,
+      "choices": ["paternal", "maternal"],
+      "default": "paternal",
+      "help": "Choose parent or origin for this haplotig"
     }
   ],
   "outputSpec": [
@@ -56,6 +65,30 @@
       "name": "scatter_n_error_vs_switch_error",
       "label": "Scatter plot of number of error vs number of switch error",
       "class": "file",
+      "optional": true,
+      "patterns": ["*.pdf"],
+      "help": ""
+    },
+    {
+      "name": "scatter_n_error_vs_switch_error_all_type",
+      "label": "Scatter plot of number of error vs number of switch error for all type",
+      "optional": true,
+      "class": "file",
+      "patterns": ["*.pdf"],
+      "help": ""
+    },
+    {
+      "name": "scatter_error_density_vs_switch_error_all_type",
+      "label": "Scatter plot of density of error vs number of switch error for all type",
+      "class": "file",
+      "optional": true,
+      "patterns": ["*.pdf"],
+      "help": ""
+    },
+    {
+      "name": "scatter_error_ratio_vs_switch_error_all_type",
+      "label": "Scatter plot of ratio of error vs number of switch error for all type",
+      "class": "file",
       "patterns": ["*.pdf"],
       "help": ""
     },
@@ -63,12 +96,14 @@
       "name": "box_plot_boundary_size",
       "label": "Box plot of boundary size for misjoined and random error haplotigs",
       "class": "file",
+       "optional": true,
       "patterns": ["*.pdf"],
       "help": ""
     },
     {
       "name": "box_plot_boundary_size_random_error_edge_effect",
       "label": "Box plot of boundary size for random error haplotigs at first/last SNPs and others",
+      "optional": true,
       "class": "file",
       "patterns": ["*.pdf"],
       "help": ""
@@ -76,6 +111,7 @@
     {
       "name": "histogram_normalize_boundary_location",
       "label": "Histogram of switch error location",
+      "optional": true,
       "class": "file",
       "patterns": ["*"],
       "help": ""

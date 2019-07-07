@@ -56,7 +56,7 @@ main() {
     #echo "Haplotigs that do not overlap with other haplotigs =" $number_snps "SNPs," $number_haplotigs "haplotigs" 
     echo "Haplotigs that map continuously with reference genome =" $number_snps "SNPs," $number_haplotigs "haplotigs"
     #8 get rid of chrY and chrUn; note that this step should perform differently if other type of chromosome present in the data. In this case, there are only autosome, chrY, chrX and chrUn.
-    cat  interlace_p_h_sorted_correctseg_tilled.snps | grep -v chrUn | grep -v chrY | grep -v chrM | grep -v chrEBV > interlace_p_h_sorted_correctseg_tilled_diploid1
+    cat  interlace_p_h_sorted_correctseg_tilled.snps | awk '$12!=Un' | awk '$12!=Y' | awk '$12!=M' | awk '$12!=EBV' > interlace_p_h_sorted_correctseg_tilled_diploid1
     #9 keep only pseudo autosomal region for chrX
     python remove_x_specific.py interlace_p_h_sorted_correctseg_tilled_diploid1 > interlace_p_h_sorted_correctseg_tilled_diploid2
     number_snps=$(cat interlace_p_h_sorted_correctseg_tilled_diploid2 | wc -l )
@@ -66,7 +66,7 @@ main() {
 
     ## Data analysis
     #10 generate haplotig_evaluation_table
-    python error_rate_prep.py interlace_p_h_sorted_correctseg_tilled_diploid2 > haplotig_evaluation_table 
+    python error_rate_prep.py interlace_p_h_sorted_correctseg_tilled_diploid2 $parent > haplotig_evaluation_table 
     echo "### accuracy type ###"
     cat haplotig_evaluation_table | awk -F '\t' '{print $NF}' | tail -n +2 | sort | uniq -c
     echo "### spanning snps ###"
@@ -91,14 +91,15 @@ main() {
     Rscript longest_track.R
 
     ## generating scatter_n_error_vs_switch_error
-    Rscript scatter_n_error_vs_switch_error.R
+    #Rscript scatter_n_error_vs_switch_error.R
+    Rscript scatter_n_error_vs_switch_error_all_type.R
     
     ## generating box_plot_boundary_size, histogram_normalize_boundary_location, box_plot_boundary_size_random_error_edge_effect
-    Rscript boundary_visualizer.R 
+    #Rscript boundary_visualizer.R 
 
     ## generating switchplot for mis_join and random error
-    Rscript switch_plot.R aggregate_parent_switch_mis_join
-    Rscript switch_plot.R aggregate_parent_switch_random_error
+    #Rscript switch_plot.R aggregate_parent_switch_mis_join
+    #Rscript switch_plot.R aggregate_parent_switch_random_error
 
 
     ###################<execution end>###################
@@ -122,20 +123,26 @@ main() {
         dx-jobutil-add-output intermediate_results "$intermediate_results" --class=array:file
         intermediate_results=$(dx upload boundary_size_vs_location --brief)
         dx-jobutil-add-output intermediate_results "$intermediate_results" --class=array:file
-        intermediate_results=$(dx upload aggregate_parent_switch_mis_join.pdf --brief)
-        dx-jobutil-add-output intermediate_results "$intermediate_results" --class=array:file
-        intermediate_results=$(dx upload aggregate_parent_switch_random_error.pdf --brief)
-        dx-jobutil-add-output intermediate_results "$intermediate_results" --class=array:file     
+ #       intermediate_results=$(dx upload aggregate_parent_switch_mis_join.pdf --brief)
+ #       dx-jobutil-add-output intermediate_results "$intermediate_results" --class=array:file
+ #       intermediate_results=$(dx upload aggregate_parent_switch_random_error.pdf --brief)
+ #       dx-jobutil-add-output intermediate_results "$intermediate_results" --class=array:file     
     fi
 
-    scatter_n_error_vs_switch_error=$(dx upload scatter_n_error_vs_switch_error.pdf --brief)
-    box_plot_boundary_size=$(dx upload box_plot_boundary_size.pdf --brief)
-    histogram_normalize_boundary_location=$(dx upload histogram_normalize_boundary_location.pdf --brief)
-    box_plot_boundary_size_random_error_edge_effect=$(dx upload box_plot_boundary_size_random_error_edge_effect.pdf --brief)
+#    scatter_n_error_vs_switch_error=$(dx upload scatter_n_error_vs_switch_error.pdf --brief)
+#    scatter_n_error_vs_switch_error_all_type=$(dx upload scatter_n_error_vs_switch_error_all_type.pdf --brief)
+#    scatter_error_density_vs_switch_error_all_type=$(dx upload scatter_error_density_vs_switch_error_all_type.pdf --brief)
+    scatter_error_ratio_vs_switch_error_all_type=$(dx upload scatter_error_ratio_vs_switch_error_all_type.pdf --brief)
+ #   box_plot_boundary_size=$(dx upload box_plot_boundary_size.pdf --brief)
+ #   histogram_normalize_boundary_location=$(dx upload histogram_normalize_boundary_location.pdf --brief)
+ #   box_plot_boundary_size_random_error_edge_effect=$(dx upload box_plot_boundary_size_random_error_edge_effect.pdf --brief)
 
-    dx-jobutil-add-output scatter_n_error_vs_switch_error "$scatter_n_error_vs_switch_error" --class=file
-    dx-jobutil-add-output box_plot_boundary_size "$box_plot_boundary_size" --class=file
-    dx-jobutil-add-output histogram_normalize_boundary_location "$histogram_normalize_boundary_location" --class=file
-    dx-jobutil-add-output box_plot_boundary_size_random_error_edge_effect "$box_plot_boundary_size_random_error_edge_effect" --class=file
+ #   dx-jobutil-add-output scatter_n_error_vs_switch_error_all_type "$scatter_n_error_vs_switch_error_all_type" --class=file
+ #   dx-jobutil-add-output scatter_n_error_vs_switch_error "$scatter_n_error_vs_switch_error" --class=file
+ #   dx-jobutil-add-output scatter_error_density_vs_switch_error_all_type "$scatter_error_density_vs_switch_error_all_type" --class=file
+    dx-jobutil-add-output scatter_error_ratio_vs_switch_error_all_type "$scatter_error_ratio_vs_switch_error_all_type" --class=file
+#    dx-jobutil-add-output box_plot_boundary_size "$box_plot_boundary_size" --class=file
+#    dx-jobutil-add-output histogram_normalize_boundary_location "$histogram_normalize_boundary_location" --class=file
+#    dx-jobutil-add-output box_plot_boundary_size_random_error_edge_effect "$box_plot_boundary_size_random_error_edge_effect" --class=file
 
 }

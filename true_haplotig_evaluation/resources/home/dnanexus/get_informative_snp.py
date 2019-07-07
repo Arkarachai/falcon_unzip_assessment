@@ -5,6 +5,7 @@ import sys
 
 def genotype_column(record):
 
+    record = record.replace('|', '/')
     tempgenotype = map(int, record.split(':')[0].split('/'))
     tempgenotype.sort()
     return tempgenotype
@@ -16,6 +17,7 @@ for line in sys.stdin:
     if line.strip().startswith('#'):  # skip vcf header
         continue
     column_split = line.strip().split('\t')
+
     if column_split[9][0] == '.' or column_split[10][0] == '.' or column_split[11][0] == '.':  # skip empty genotype
         continue
 

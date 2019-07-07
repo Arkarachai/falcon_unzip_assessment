@@ -1,21 +1,7 @@
+from __future__ import print_function
 import sys
 import collections
 import random
-
-
-def error_rate(alist):
-    if len(set(alist)) == 1:
-        return 0
-    else:
-        totallen = len(alist)
-        acount = []
-        for member in set(alist):
-            acount.append(alist.count(member))
-        return 1.0*min(acount)/totallen
-
-
-def paternal_rate(alist):
-    return 1.0*alist.count('d')/len(alist)
 
 
 def normalized_coor_float(snp_span_list):
@@ -26,12 +12,11 @@ def normalized_coor_float(snp_span_list):
 def error_pattern(alist):
     if len(set(alist)) == 1:
         return 0, set()
-    mergeword = ''.join(alist)
     switch_counter = 0
     position = 1
     switch_position = set()
-    currentword = mergeword[0]
-    for character in mergeword[1::]:
+    currentword = alist[0]
+    for character in alist[1::]:
         if character != currentword:
             switch_counter += 1
             switch_position.add(position)
@@ -40,12 +25,9 @@ def error_pattern(alist):
     return switch_counter, switch_position
 
 
-def error_string(alist):
+def error_string(alist, parent_label):
 
-    acount = []
-    for member in set(alist):
-        acount.append((alist.count(member), member))
-    correct_pattern = max(acount)[1]
+    correct_pattern = parent_label
     return_list = []
     for i in alist:
         if i == correct_pattern:
@@ -95,11 +77,12 @@ if __name__ == "__main__":
     haplotype_dict_location = collections.defaultdict(list)
 
     fd = open(sys.argv[1])
+    parent_label = 'd' if sys.argv[2] == 'paternal' else 'm'
+    print('correct label = {0}'.format(parent_label), file=sys.stderr)
     lines = fd.readlines()
     for line in lines:
         temp = line.strip().split('\t')
         parental = parental_reconcile(temp[0], 'h')
-   #     contig_origin = temp[-1]
         location = int(temp[1])
         haplotype_dict[(temp[-2].replace('chr', ''), temp[-1])].append(parental)
         haplotype_dict_location[(temp[-2].replace('chr', ''), temp[-1])].append(location)
@@ -115,26 +98,21 @@ if __name__ == "__main__":
     fd_boundary_size_vs_location.writelines('\t'.join(['class', 'n_start_position', 'n_end_position', 'distance', 'norm_distance', 'edge'])+'\n')
 
 
-    print '\t'.join(['chr', 'contig', 'N', 'error_rate', 'snp_span_length', 'parent_switch_n',
-                     'contig_origin_switch_n', 'parent_pattern', 'contig_origin_pattern',
-                     'pattern_switch_position', 'contig_origin_switch_position', 'parent_contig_subset',
-                     'haplotig_daddy_rate', 'error_string', 'error_count', 'count_i', 'count_ii', 'count_iii',
-                     'count_iiii', 'count_i>5', 'phasing_type'])
+    print('\t'.join(['chr', 'contig', 'N', 'error_rate', 'snp_span_length', 'parent_switch_n',
+                     'parent_pattern', 'pattern_switch_position',
+                     'error_string', 'error_count', 'count_i', 'count_ii', 'count_iii',
+                     'count_iiii', 'count_i>5', 'phasing_type']))
 
     for key in allkey:
 
         snp_span_list = haplotype_dict_location[key]
         snp_span_length = max(snp_span_list)-min(snp_span_list)
         parent_pattern = ''.join(haplotype_dict[key])
-        contig_origin_pattern = 'p'
-        parent_pattern_switch_counter = error_pattern(parent_pattern)[0]
-        parent_pattern_switch_position = error_pattern(parent_pattern)[1]
-        contig_origin_switch_counter = error_pattern(contig_origin_pattern)[0]
-        contig_origin_switch_position = error_pattern(contig_origin_pattern)[1]
-        parent_contig_subset = parent_pattern_switch_position < contig_origin_switch_position
-        error_string_breakdown_count = error_string_breakdown(error_string(parent_pattern))
+        parent_pattern_switch_counter, parent_pattern_switch_position = error_pattern(parent_pattern)
+        error_string_sequence = error_string(parent_pattern, parent_label)
+        error_string_breakdown_count = error_string_breakdown(error_string_sequence)
         low_count = error_string_breakdown_count['i']+error_string_breakdown_count['ii']
-        high_count = error_string(parent_pattern).count('iiiii')
+        high_count = error_string_sequence.count('iiiii')
         intermediate_count = error_string_breakdown_count['iii']+error_string_breakdown_count['iiii']
         if high_count > 0 and low_count > 0:
             mis_phase_type = 'mix'
@@ -144,21 +122,20 @@ if __name__ == "__main__":
             mis_phase_type = 'random_error'
         elif intermediate_count > 0:
             mis_phase_type = 'inbetween'
-        elif error_rate(parent_pattern) == 0:
+        elif error_string_sequence.count('i') == 0:
             mis_phase_type = 'no_error'
         else:
             mis_phase_type = 'impossible_condition'
 
-        print '\t'.join(map(str, [
-            '\t'.join(map(str, key)), len(parent_pattern), error_rate(parent_pattern),
-            snp_span_length, parent_pattern_switch_counter, contig_origin_switch_counter,
-            parent_pattern, contig_origin_pattern, str(sorted(list(parent_pattern_switch_position))),
-            str(sorted(list(contig_origin_switch_position))), parent_contig_subset, paternal_rate(parent_pattern),
-            error_string(parent_pattern), error_string(parent_pattern).count('i'),
+        print('\t'.join(map(str, [
+            '\t'.join(map(str, key)), len(parent_pattern), (error_string_sequence.count('i')*1.0)/len(parent_pattern),
+            snp_span_length, parent_pattern_switch_counter,
+            parent_pattern,  str(sorted(list(parent_pattern_switch_position))),
+            error_string_sequence, error_string_sequence.count('i'),
             error_string_breakdown_count['i'], error_string_breakdown_count['ii'],
             error_string_breakdown_count['iii'], error_string_breakdown_count['iiii'],
-            error_string(parent_pattern).count('iiiii'), mis_phase_type
-            ]))
+            error_string_breakdown_count['iiiii'], mis_phase_type
+            ])))
 
         # make switching contig plot for i5 up
         if mis_phase_type == 'mis_join':
