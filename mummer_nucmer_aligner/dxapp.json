@@ -1,7 +1,7 @@
 {
   "name": "mummer_nucmer_aligner",
-  "title": "MUMmer3 nucmer aligner",
-  "summary": "Run MUMmer3's nucmer algorithm to align two sets of genomic sequences to each other. This can be used for instance to compare a genome assembly to a reference genome or to compare the genomes of two related species",
+  "title": "MUMmer4 nucmer aligner",
+  "summary": "Run MUMmer4's nucmer algorithm to align two sets of genomic sequences to each other. This can be used for instance to compare a genome assembly to a reference genome or to compare the genomes of two related species",
   "dxapi": "1.0.0",
   "version": "1.0.0",
   "inputSpec": [
@@ -35,7 +35,22 @@
       "help": "",
       "class": "string",
       "optional": true
+    },
+    {
+      "name": "run_dot_prep",
+      "label": "Run unique anchor filtering and generate files for Dot visualization",
+      "help": "Dot is a visualization tool for interactive dot plots. Turn on this option to run a small script that generates the files for Dot automatically.",
+      "class": "boolean",
+      "default": true
+    },
+    {
+      "name": "dot_prep_overview_size",
+      "label": "Number of overview alignments",
+      "help": "The Dot index file contains the longest alignments to give an overview before zooming in. This controls how many alignments to show, which when larger will result in slower loading",
+      "class": "int",
+      "default": 1000
     }
+
   ],
   "outputSpec": [
     {
@@ -55,6 +70,14 @@
       "class": "file",
       "patterns": ["*.snps"],
       "help": ""
+    },
+    {
+      "name": "dot_output",
+      "class": "array:file",
+      "patterns": [
+        "*"
+      ],
+      "help": ""
     }
   ],
   "runSpec": {
@@ -62,16 +85,16 @@
     "interpreter": "bash",
     "file": "src/code.sh",
     "distribution": "Ubuntu",
-    "release": "14.04"
+    "release": "16.04"
   },
   "regionalOptions": {
     "aws:us-east-1": {"systemRequirements": {"*": {"instanceType": "mem3_ssd1_x16"}},
-                      "assetDepends": [{"id": {"$dnanexus_link": "record-F8Q8xBQ0XyyBQxvK0g3qgjzg"}},
-                        {"id": {"$dnanexus_link": "record-FGgvGv005PVz6J3457qP3yYx"}}]
+                      "assetDepends": [{"id": {"$dnanexus_link": "record-FPQGy7Q01Y4PVGbZGpq9fxfX"}},
+                        {"id": {"$dnanexus_link": "record-FPQJfbQ0Xp0bGK7jGq3qQxgV"}}]
      },
     "azure:westus": {"systemRequirements": {"*": {"instanceType": "azure:mem3_ssd1_x16"}},
-                      "assetDepends": [{"id": {"$dnanexus_link": "record-FKyZ0qQ9785kk02XP4GqZ77V"}},
-                        {"id": {"$dnanexus_link": "record-FKyZ0jj9785V1747P3zg2qpB"}}]
+                      "assetDepends": [{"id": {"$dnanexus_link": "record-FQ46FY09V9KxFZg77fG3YXG7"}},
+                        {"id": {"$dnanexus_link": "record-FQ45yB8908g7BVkZ4FvZb4kY"}}]
     }
   }
 }

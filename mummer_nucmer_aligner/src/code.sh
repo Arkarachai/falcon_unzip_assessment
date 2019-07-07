@@ -15,8 +15,8 @@ main() {
     refname="${refname%.gz}"
     refname="${refname%.fa}"
     refname="${refname%.fasta}"
-    dx download "$ref_fastagz" -o "${refname}.gz"
-    gunzip "${refname}.gz" &
+    dx download "$ref_fastagz" -o "${refname}_ref.gz"
+    gunzip "${refname}_ref.gz" &
     queryname=$(dx describe "$query_fastagz" --name)
     queryname="${queryname%.gz}"
     queryname="${queryname%.fa}"
@@ -27,10 +27,12 @@ main() {
 
     ###################<execution start>###################
 
-    path_to_mummer="/MUMmer3.23"
+    path_to_mummer="/usr/local/bin"
     mkdir -p out/nucmer_full_outputs
     mkdir -p out/nucmer_filtered_outputs
     mkdir -p out/nucmer_filtered_snps
+    mkdir -p out/dot_output
+    
     
     if [ -n "$prefix" ]; then
         prefix="$prefix"
@@ -38,7 +40,7 @@ main() {
         prefix="${queryname}_${refname}"
     fi
     
-    ${path_to_mummer}/nucmer --prefix="$prefix" $extra_cmd "$refname" "$queryname"
+    ${path_to_mummer}/nucmer --prefix="$prefix" $extra_cmd "${refname}_ref" "$queryname"
     ${path_to_mummer}/show-coords -rcl "$prefix".delta > "$prefix".coords
     ${path_to_mummer}/delta-filter -r -q "$prefix".delta > "$prefix"_reduce.delta  
     ${path_to_mummer}/show-tiling "$prefix".delta > "$prefix".tiling
@@ -50,6 +52,10 @@ main() {
     mv *.tiling *.delta *.coords *.snps out/nucmer_full_outputs
     
     ###################<execution end>###################
-
+    if [ "$run_dot_prep" == true ]; then
+        python DotPrep.py --delta out/nucmer_full_outputs/"$prefix".delta  --out "$prefix"_dot --overview "$dot_prep_overview_size"
+        mv "$prefix"_dot* out/dot_output
+    fi
+    
     dx-upload-all-outputs
 }
