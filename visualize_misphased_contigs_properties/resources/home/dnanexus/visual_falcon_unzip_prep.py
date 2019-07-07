@@ -111,17 +111,9 @@ if __name__ == "__main__":
 
     fd_aggregate_parent_switch_mis_join = open('aggregate_parent_switch_mis_join', 'w')
     fd_aggregate_parent_switch_random_error = open('aggregate_parent_switch_random_error', 'w')
-    fd_haplotig_evaluation_table = open('haplotig_evaluation_table', 'w')
     fd_boundary_size_vs_location = open('boundary_size_vs_location', 'w')
     fd_boundary_size_vs_location.writelines('\t'.join(['class', 'n_start_position', 'n_end_position', 'distance', 'norm_distance', 'edge'])+'\n')
 
-    fd_haplotig_evaluation_table.writelines('\t'.join(['chr', 'contig', 'N', 'error_rate', 'snp_span_length',
-                                                       'parent_switch_n', 'contig_origin_switch_n', 'parent_pattern',
-                                                       'contig_origin_pattern', 'pattern_switch_position',
-                                                       'contig_origin_switch_position', 'parent_contig_subset',
-                                                       'haplotig_daddy_rate', 'error_string', 'error_count', 'count_i',
-                                                       'count_ii', 'count_iii', 'count_iiii', 'count_i>5',
-                                                       'phasing_type'])+'\n')
 
     for key in allkey:
 
@@ -180,19 +172,6 @@ if __name__ == "__main__":
                     mis_phase_type, start_norm_position, end_norm_position, true_distance, norm_distance, edge_label)+'\n')
 
 
-        # get haplotig evaluation table
-        fd_haplotig_evaluation_table.writelines('\t'.join(map(str, [
-            '\t'.join(map(str, key)), len(parent_pattern), error_rate(parent_pattern),
-            snp_span_length, parent_pattern_switch_counter, contig_origin_switch_counter,
-            parent_pattern, contig_origin_pattern, str(sorted(list(parent_pattern_switch_position))),
-            str(sorted(list(contig_origin_switch_position))), parent_contig_subset, paternal_rate(parent_pattern),
-            error_string(parent_pattern), error_string(parent_pattern).count('i'),
-            error_string_breakdown_count['i'], error_string_breakdown_count['ii'],
-            error_string_breakdown_count['iii'], error_string_breakdown_count['iiii'],
-            error_string(parent_pattern).count('iiiii'), mis_phase_type
-            ]))+'\n')
-
-    fd_haplotig_evaluation_table.close()
     fd_aggregate_parent_switch_mis_join.close()
     fd_aggregate_parent_switch_random_error.close()
     fd_boundary_size_vs_location.close()

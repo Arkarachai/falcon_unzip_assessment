@@ -14,6 +14,14 @@
       "help": ""
     },
     {
+      "name": "haplotig_evaluation_table",
+      "label": "Tabble of profiled haplotigs",
+      "class": "file",
+      "optional": false,
+      "patterns": ["haplotig_evaluation_table"],
+      "help": ""
+    },
+    {
       "name": "raw_plotting_files",
       "label": "Want raw data that generate plot?",
       "class": "boolean",

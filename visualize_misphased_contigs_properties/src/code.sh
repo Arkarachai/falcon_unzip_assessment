@@ -33,8 +33,6 @@ main() {
         dx-jobutil-add-output intermediate_file "$intermediate_file" --class=array:file
         intermediate_file=$(dx upload aggregate_parent_switch_random_error --brief)
         dx-jobutil-add-output intermediate_file "$intermediate_file" --class=array:file
-        intermediate_file=$(dx upload haplotig_evaluation_table --brief)
-        dx-jobutil-add-output intermediate_file "$intermediate_file" --class=array:file
         intermediate_file=$(dx upload boundary_size_vs_location --brief)
         dx-jobutil-add-output intermediate_file "$intermediate_file" --class=array:file
     fi
