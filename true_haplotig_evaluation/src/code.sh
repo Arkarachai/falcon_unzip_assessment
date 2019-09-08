@@ -93,6 +93,10 @@ main() {
     ## generating scatter_n_error_vs_switch_error
     #Rscript scatter_n_error_vs_switch_error.R
     Rscript scatter_n_error_vs_switch_error_all_type.R
+
+    ## generte error plot by size in log scale
+    Rscript error_by_log10_length.R haplotig_evaluation_table
+    mv haplotig_evaluation_table_scatter_error_by_log10_length.pdf ${parent}_scatter_error_by_log10_length.pdf
     
     ## generating box_plot_boundary_size, histogram_normalize_boundary_location, box_plot_boundary_size_random_error_edge_effect
     #Rscript boundary_visualizer.R 
@@ -105,6 +109,8 @@ main() {
     ###################<execution end>###################
 
     if [ "$intermediate_results" == true ]; then
+        intermediate_results=$(dx upload ${parent}_scatter_error_by_log10_length.pdf --brief)
+        dx-jobutil-add-output intermediate_results "$intermediate_results" --class=array:file
         intermediate_results=$(dx upload reduce_noheader_p.variants --brief)
         dx-jobutil-add-output intermediate_results "$intermediate_results" --class=array:file
         intermediate_results=$(dx upload informative_primary.snps --brief)
